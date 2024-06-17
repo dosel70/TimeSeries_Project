@@ -1,7 +1,10 @@
-#🚩 TimeSeries_Project
-시계열 데이터 프로젝트 (애플주식, 금 주식 비교 및 애플 주식 예측 프로젝트)
-**애플 주식 & 금 주식 주가 예측 프로젝트**
-<img src='https://github.com/dosel70/TimeSeries_Project/assets/143694489/f9b0a342-d637-498b-b5f2-6abe13dd74de' width="800px">  
+<h1>🚩 TimeSeries_Project </h1> 
+
+
+**애플 주식 & 금 주식 주가 예측 프로젝트**  
+
+<img src='https://github.com/dosel70/TimeSeries_Project/assets/143694489/f9b0a342-d637-498b-b5f2-6abe13dd74de' width="800px">    
+
 <h1> Apple & Gold Time Series Project</h1>
 
 ---
