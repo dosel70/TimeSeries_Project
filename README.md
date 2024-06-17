@@ -231,12 +231,12 @@
 <img width="650" alt="html1" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/7686445f-c78c-4bee-9aa5-a7f3a7d994ec">  
 
 ### ARIMA 모델 예측 결과 시각화  
-🍎 애플 ARIMA 예 시각화    
+🍎 애플 ARIMA 예측 시각화    
 <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/ae3872f8-c5b9-4202-ba2c-2a8e65a06b81" width="800">  
 
 **손실율(MSLE) : 0.03**
 
-🏆 금 ARIMA 예 시각화  
+🏆 금 ARIMA 예측 시각화  
 <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/2c5fe23c-60da-480f-9262-8ef0795a1455" width="800">  
 
 **손실율(MSLE) : 0.0001**  
@@ -256,80 +256,118 @@
 
 -----
   
-> 기존 사전 훈련 데이터 csv를 Django Database에 insert 하였습니다.
+### 📌 AutoArima 모델 사용하여 훈련 및 예측 시행
 
-- `get_index_from_member_tag`
+<details><summary>👉 데이터셋 분리 진행(Train Data & Test Data) 코드 보기</summary>  
+
+- 애플(AAPL) 데이터셋 분리 및 시각화   
+<img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/06cff0f7-28b8-4b01-9b87-58e0e2a1e637" width="600">  
+
+- 금(GLD) 데이터셋 분리 및 시각화
+<img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/e4ba5712-335f-4560-80fc-37fcebaf6c43" width="600">
+
+- 📈 훈련 데이터과 테스트 데이터를 분리하기위해, 각각 80%, 20% 비중으로 나눠야하기 때문에, 슬라이싱을 통해 0.8을 곱한 즉 80%의 데이터를 훈련 데이터에, 나머지 20%의 데이터를 테스트 데이터에 적용시킴으로써, 훈련 데이터와 테스트 데이터의 시각화를 통해 확인 할 수 있습니다.
+
+</details>
   
-- ✨ 해당 메서드는 회원의 관심사 태그 에 관하여 가장 유사한 원랩을 찾아내는 역할을 합니다.
-- `CountVectorizer()`를 통해 , 코사인 유사도를 계산하고, 가장 높은 평균 유사도를 가진 원랩을 추출하여 MainView(메인페이지)에 전달합니다.
+#### ✏️ KPSS, ADF, PP 정상성 검정 진행
+- 차분을 진행하는 것이 필요할 지 결정하기 위해 사용되는 세가지의 검정 방법을 진행하였습니다. (KPSS,ADF,PP)
   - <details><summary>👉 코드 보기</summary>
-      <img width="800" alt="html1" src="https://github.com/dosel70/django-ai/assets/143694489/f6bf6d5a-b662-4c67-b5a7-35a10967206a">
+      <img width="600" alt="html1" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/4a43f9fa-cefe-45e3-a237-5c663427b4f8">  
+- 위 이미지 내에 있는 코드를 통해 애플과 금의 금융 데이터에서의 적정 차분값은 1로 나왔습니다.
+    </details>    
+
+  - ✨ - 위 Summary 내에 있는 코드를 통해 애플과 금의 금융 데이터에서의 적정 차분값은 1로 나왔습니다.
+ 
+  - 다음으로 해당 auto_arima 모델을 훈련한 뒤 각 훈련모델의 Summary를 통해 검정 통계량을 분석하겠습니다.
+    
+     <details><summary>👉 애플(AAPL) 검정통계량 분석 결과 확인</summary>
+      <img width="800" alt="html1" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/65901791-312e-4cfc-a3e3-ae549ac3bbc6">  
+ 
+      #### 애플 주식 데이터 검정 통계량 분석 결과  
+      - 애플 주식의 경우, 융박스 검정 통계량(Prob(q))을 따져보았을 때, 0.4로, 어느정도 서로 독립적이고, 동일한 분포를 따르는 것을 알 수 있습니다.
+      - 이분산성 검정 통계량(Prob(H))을 보았을 때는, 0으로 잔차의 분산이 일정하지 않은 것을 볼 수 있었습니다.
+      - 자크-베라 검정 통계량(Prob (JB))과 같은 경우에도 0의 값이 나왔기 때문에, 해당 애플 주식 데이터가 일정한 평균과 분산을 따르지 않은 것을 알 수 있었습니다.
+      - Skew를 보았을 때는, -0.05로 0과 어느정도 가깝다 판단하였기 때문에, 왜도가 심하지 않은 것을 알 수 있었습니다.
+      - Kurtosis를 보았을 때는 4.61로 3과 어느정도 가깝기 때문에, 첨도 또한 심하진 않을 것으로 예상됩니다.
+ 
+      <img width="800" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/33eb7d4c-ace6-4103-b18e-5a65baf35857">    
+ 
+      #### 위 네번째 Correlogram을 보면, 1차 차분한 데이터에서의 상관관계들이 모두 적정값에 안착되어있으며, 정상적인 시계열 데이터 형태를 보입니다.
+      
     </details>  
 
-- `get_index_from_member_tag`
+    <details><summary>👉 금(GDL) 검정통계량 분석 결과 확인</summary>
+      <img width="800" alt="html1" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/eb054888-a05d-4a2a-9665-777fdd924885">  
+ 
+      ####  주식 데이터 검정 통계량 분석 결과  
+     - 금 주식의 경우, 융박스 검정 통계량(Prob(q))을 따져보았을 때, 0.65로, 서로 독립적이고, 동일한 분포를 따르는 것을 알 수 있습니다.
+     - 이분산성 검정 통계량(Prob(H))을 보았을 때는, 0.04로 잔차의 분산이 일정하지 않을 것으로 예상됩니다.
+     - 자크-베라 검정 통계량(Prob (JB))과 같은 경우에는 0의 값이 나왔기 때문에, 해당 금 주식 데이터가 일정한 평균과 분산을 따르지 않은 것을 알 수 있었습니다.
+     - Skew를 보았을 때는, 0.16으로 0과 어느정도 가깝다 판단하였기 때문에, 왜도가 심하지 않은 것을 알 수 있었습니다.
+     - Kurtosis를 보았을 때는 3.93으로 3과 어느정도 가깝기 때문에, 첨도 또한 심하진 않을 것으로 예상됩니다.
+ 
+      <img width="800" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/d3dbb8cd-321d-4838-8083-0cf5225e6063">    
+ 
+      #### 위 네번째 Correlogram을 보면, 1차 차분한 데이터에서의 2번 상관관계 에서 적정값을 살짝 벗어나는 모습을 보이고 있으며,  
+      #### 이를 미루어보았을 때, 모델의 성능에 대한 추가적인 검토가 필요한 부분이지만, 전체적으로 시계열 데이터를 예측하는 데 있어서   
+      #### 매우 유효한 성능을 보이고 있으므로 일부 개선이 필요할 수 있지만, 전반적으로 신뢰할 수 있는 결과를 제공합니다.
+       
+    </details>
+- ✏️ 모델 평가 시행 (신뢰구간 확인)
+ - <details><summary>👉 코드 보기</summary>
+      <img width="600" alt="html1" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/88879c99-388f-4a7a-9620-8246e335a9e5">   
+   
+   - 두번 예측을 수행하여, 각각 신뢰구간의 평균값으로 예측을 수행합니다. (금(GLD)도 동일한 방식으로 진행)
+   </details>  
     
-- 다시 AIView로 돌아와서 클래스 내에서 회원의 관심사 태그를 기반으로 가장 유사한 OneLab의 객체들을 데이터베이스에서 가져오는 메서드를 정의 하였습니다.
-- 해당 코드는 주어진 회원 관심사 태그에 대해 데이터베이스에서 OneLab 객체를 가져와 해당 원랩의 데이터를 벡터화하여 유사도를 계산합니다. 그리고 각 OneLab 객체의 평균 유사도를 계산하고, 가장 높은 유사도를 가진 OneLab 객체의 인덱스와 벡터를 반환합니다.
-  - <details><summary>👉 코드 보기</summary>
-      <img width="800" alt="html1" src="https://github.com/dosel70/django-ai/assets/143694489/4ec0bf7a-6c13-422e-8fcc-4a63bcdeb4c7">
-    </details>
+  - <details><summary>👉 위 코드를 함수로 만들어 모듈화 코드 보기</summary>
+       <img width="600" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/cacab99b-075c-4a6b-a4e2-147760296bc3">  
 
-- `recommend_similar_onelabs(self, member_tag, content_vectors, num_recommendations=3)`
+       <img width="400" src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/6835bdb9-4ae4-44d1-98a0-b83357d86099">
+    </details>    
 
--  recommend_similar_onelabs 메서드를 통해 실제 메인화면에서 회원의 관심사와 유사한 OneLab 목록을 추천해주는 기능을 수행합니다.
--  기본적으로 주어진 회원의 관심사 태그에 가장 유사한 원랩 목록 들을 우선적으로 추천하지만 만약 유사한 객체가 부족하면 무작위로 추가하여 추천 목록을 채우는 방식으로 동작하게 하였습니다.
- 
-  - <details><summary>👉 코드 보기</summary>
-      <img width="800" alt="html1" src="https://github.com/dosel70/django-ai/assets/143694489/7c57293c-e660-49e8-b5bc-ffafc7fff3c1">  
+#### 📈 AutoArima 모델 예측 시각화  
 
-      <img width="800" alt="html1" src="https://github.com/dosel70/django-ai/assets/143694489/86ec6391-2815-4d76-827b-a0dee6ce4ede">
-    </details>
+🍎 애플 Auto_ARIMA 예측 시각화  
+<img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/61c55b9c-858c-4751-bc9d-67de1f9f6b12" width="700">  
 
+🏆 금 Auto_ARIMA 예측 시각화   
+<img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/f3f5b1d7-6ced-40ce-b622-f027de7b0b7f" width="700">
 
+### 📌 DeepLearning - Propet 모델 사용하여 훈련 및 예측 시행  
 
-<h3>📌 서버 배포 및 화면 시연</h3>
+#### ✨ Custom Propet 모델로 훈련 및 예측 수행    
 
-- 로컬에서 구현한 기능이 정상적으로 작동이 되는 것을 확인하고 이를 ubuntu를 이용하여 서버에 배포하였습니다.
-
----
-
-<h3>📌 Trouble-Shooting</h3>
-
-- MainView에서 RestAPI를 이용하여 기존 AIView에서 정의된 함수들을 불러오지 못하여 메인 페이지에서 오류가 나는 에러
+📌 1단계 - 기본 Propet 모델로 훈련 및 예측 진행  
+<details><summary>👉 코드 보기 </summary>    
   
-- 메인페이지에서 추천 원랩 목록이 나타나지 않은 에러 
+  - Propet 예측 진행을 위해 컬럼명을 변경해준다.
+  <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/4d478112-36bc-4e32-83ed-80d37b6636e6" width="540">
+
+  - `make_future_dataframe' 함수에서 periods를 270으로 설정해주어 예측 기간을 설정해준다.
+  <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/95b7687e-9d70-4aa4-8698-c6ea1f2e2d33" width="600">
+
+  - 애플(AAPL) 예측 결과 시각화 (예측 값과 훈련 데이터 값 비교)
+  <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/893e96af-4ba9-45bb-aac8-e5a615ada258" width="600">
+
+  - 애플(AAPL) 실제 값 & 예측 값 시각화
+  <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/d3065f9b-9d30-4a0d-a5c1-828a418dd98e" width="600">
+
+  **금의 경우에도 위와 동일한 방법으로 예측하였습니다.**     
   
-- 위 오류를 수정하고 원랩 목록들이 출력이 되었지만, 회원의 관심사와 맞지 않은 원랩 목록들이 출력 
- 
+  - 금(GDL) 예측 결과 시각화 (예측 값과 훈련 데이터 값 비교)
+  <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/4c7e81a8-b238-4093-9889-c8e036b67515" width="600">
 
- 
-<h4>✨ MainView에서 RestAPI를 이용하여 기존 AIView에서 정의된 메서드 들을 불러오지 못하여 메인 페이지에서 오류가 나는 에러</h4>
+  - 금(GDL) 실제 값 & 예측 값 시각화
+  <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/7a957bff-7b81-4499-ba66-31c65687d0b8" width="600">
+</details>
 
-- url 경로를 제대로 설정해 주었는데도 불구하고 Not Found 에러가 나타났습니다.
-- 경로를 다시 추적을 해보니, Main url 파일에 새로이 만든 ai url을 추가하지 않아 못 찾는 것을 파악하고 추가해주었습니다.
-- 수정한 다음 다시 확인하니 View로 넘어가는 것을 파악했으나, 메인페이지에서 아예 원랩 목록이 출력이 되지 않는 문제가 발생하였습니다.
 
-<h4>✨ 메인페이지에서 추천 원랩 목록이 나타나지 않은 에러 </h4>
-
-- View로 넘어간 것을 확인하였지만, 실제 원랩 목록들이 나오지 않는 것을 확인 하였습니다.
-- AI View 내에 recommend_similar_onelabs 라는 메서드 내에 `recommended_onelabs.append(OneLab.objects.get(id=idx + 1))` 라고 코드를 작성한 부분이 있었습니다.
-- id = idx + 1이라고 명시한부분에서 + 1 을 더한 것 때문에 인덱스 오류가 발생하여서 전체적인 로직 구성에 오류가 발생하였던 문제 였습니다.
-- 그래서 `recommended_onelabs.append(OneLab.objects.get(id=idx))`로 수정하여서 추천 원랩목록들이 나왔지만, 회원의 관심사와는 맞지 않은 원랩 목록들이 추천되는 이슈가 발생하였습니다.
-- <details><summary>👉 코드 보기</summary>
-    <img width="800" alt="html1" src="https://github.com/dosel70/django-ai/assets/143694489/f00945fc-3ba1-4b22-9d35-853e005d3f7b">
-  </details>
-
-<h4>✨ 회원의 관심사와 맞지 않은 원랩 목록들이 출력되는 에러</h4>
-
-- 원랩목록들이 나오지 않았던 문제를 해결한 다음 다시 확인했으나, View를 통해 받아온 추천 원랩 목록 기능 로직이 잘못 구성되어있다는 것을 알게 되었습니다.
-- 기존 코사인 유사도 분석 기능이 있는 메서드 내에서  원랩의 유사도 점수가 낮게 나와서 `onelabs_list = [f"{onelab.onelab_main_title[:10]} {onelab.onelab_content[:20]} {onelab.onelab_detail_content[:10]}" for onelab in onelabs]` 슬라이싱을 통해서 각 원랩의 제목,내용,한줄소개 부분이 축소되어 데이터가 줄어들게 되어 연산 속도를 높이고, 모델이 핵심 정보에 더 집중할 수 있게 되었습니다.
-- 최종적으로 사용자의 태그와 일치하는 원랩 객체를 우선적으로 추천하도록 로직을 수정했습니다.
-- 이를 확인하여 다시 메인 화면을 확인한 결과 정상적으로 회원의 관심사와 유사한 원랩 목록들이 출력 되는 것을 확인 할 수 있었습니다.
-  
-- <details><summary>👉 코드 보기</summary>
-    <img width="800" alt="html1" src="https://github.com/dosel70/django-ai/assets/143694489/8cb8bc6d-999f-4b47-a50a-2dc615b1cdac">
-  </details> 
-
+📌 2단계 - 트렌드, 계절성과 같은 특성을 활용한 Hyperparameter Tuning을 위해 다양한 파라미터 조합을 생성   
+<details><summary>👉 코드 보기 </summary>
+  <img src="" width="740">
+</details>
 
 <h3>📌 느낀점</h3>
 
