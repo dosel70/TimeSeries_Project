@@ -222,7 +222,7 @@
 ---
 ### **📌 ARIMA 모델을 사용한 모델 평가 진행**  
 
-<details><summary>👉 코드 보기</summary>    
+<details><summary>👉 코드 & 결과 시각화 보기</summary>    
 
 - 불안정 시계열인 ARIMA 모델을 불러온 뒤, order 값에 AR,D(difference),MA(Mooving Average)를 설정한 뒤,
   시작 인덱스와 종료 인덱스 기간을 22년2월1일부터, 24년 6월 12일 까지 설정하여, 훈련과 평가를 진행 후 시각화를 진행하였습니다.
@@ -254,7 +254,7 @@
   
 </details>
 
-    
+-----
   
 > 기존 사전 훈련 데이터 csv를 Django Database에 insert 하였습니다.
 
