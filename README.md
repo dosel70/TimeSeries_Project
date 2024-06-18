@@ -1,7 +1,7 @@
 <h1>🚩 TimeSeries_Project </h1> 
 
 
-**애플 주식 & 금 주식 주가 예측 프로젝트**  
+**애플 주식 & 금 주식 ETF 예측 프로젝트**  
 
 <img src='https://github.com/dosel70/TimeSeries_Project/assets/143694489/f9b0a342-d637-498b-b5f2-6abe13dd74de' width="800px">    
 
@@ -11,12 +11,12 @@
 
 <h2>📃 시계열데이터 프로젝트 목차</h2>
 
-- 데이터분석을 통한 애플(AAPL)과 금(GLD) 주가 분석 시각화
+- 데이터분석을 통한 애플(AAPL)과 금(GLD) ETF 분석 시각화
 - ACF, PACF를 통한 전처리 진행
 - ARIMA , auto_arima 을 사용한 모델 평가 진행
 - DeepLearning Propet을 사용하여 미래 주가 예측
 - 느낀점
-> 이번 프로젝트는 시계열데이터분석을 활용하여 애플 주가 전망을 분석하고, 금 주가와 비교분석하는 프로젝트 입니다.
+> 이번 프로젝트는 시계열데이터분석을 활용하여 애플 ETF 전망을 분석하고, 금 ETF와와 비교분석하는 프로젝트 입니다.
 
 ---
 
