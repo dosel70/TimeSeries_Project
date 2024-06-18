@@ -234,12 +234,12 @@
 🍎 애플 ARIMA 예측 시각화    
 <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/ae3872f8-c5b9-4202-ba2c-2a8e65a06b81" width="800">  
 
-**손실율(MSLE) : 0.03**
+**MAPE : 0.03**
 
 🏆 금 ARIMA 예측 시각화  
 <img src="https://github.com/dosel70/TimeSeries_Project/assets/143694489/2c5fe23c-60da-480f-9262-8ef0795a1455" width="800">  
 
-**손실율(MSLE) : 0.0001**  
+**MAPE : 0.0001**  
 
 
 ### 💡 ARIMA 모델 평가 결과
